@@ -12,6 +12,7 @@ public class Map {
     //Высота и ширина карты
     public int h;
     public int w;
+    private int baseResource = 0;
 
     public int getBaseX() {
         return baseX;
@@ -27,7 +28,7 @@ public class Map {
     private int baseX;
 
     //Массив лабиринта. True - проход, false - стена
-    private boolean [][] map;
+    private boolean[][] map;
 
     private int[][] distanceMap;
 
@@ -51,28 +52,29 @@ public class Map {
         return boolMap;
     }
 
-    public Map(boolean [][] map) {
+    public Map(boolean[][] map) {
         this.map = map;
         this.h = map.length;
         this.w = map[0].length;
     }
 
-    public Map (int [][] map) {
+    public Map(int[][] map) {
         this(intMapToBool(map));
     }
 
     //True если выходит за рамки матрицы лабиринта
-    private boolean ifOutside (int h, int w) {
+    private boolean ifOutside(int h, int w) {
         if (h > this.h - 1 || w > this.w - 1 || h < 0 || w < 0)
-            return true; else
+            return true;
+        else
             return false;
     }
 
-    public boolean mapValue (int h, int w) {
+    public boolean mapValue(int h, int w) {
         return map[h][w];
     }
 
-    public void addMine (Mine mine) {
+    public void addMine(Mine mine) {
         mine.setMap(this);
         createPathToBase(mine);
         this.mines.add(mine);
@@ -85,17 +87,17 @@ public class Map {
         return mines;
     }
 
-    public void setBase (int y, int x) {
+    public void setBase(int y, int x) {
         baseY = y;
         baseX = x;
         createDistanceMap();
     }
 
-    private void createDistanceMap () {
+    private void createDistanceMap() {
 
         int d = 1;
         distanceMap = new int[h][w];
-        distanceMap [baseY][baseX] = d;
+        distanceMap[baseY][baseX] = d;
         int[] dy = {-1, 0, 1, 0};
         int[] dx = {0, 1, 0, -1};
         boolean stop = false;
@@ -106,7 +108,7 @@ public class Map {
                     if (distanceMap[i][j] == d) {
                         for (int z = 0; z < 4; z++) {
                             if (map[i + dy[z]][j + dx[z]] && (distanceMap[i + dy[z]][j + dx[z]] == 0)) {
-                                distanceMap [i + dy[z]][j + dx[z]] = d + 1;
+                                distanceMap[i + dy[z]][j + dx[z]] = d + 1;
                                 stop = false;
                             }
                         }
@@ -117,7 +119,7 @@ public class Map {
         }
     }
 
-    public void printDistanceMap () {
+    public void printDistanceMap() {
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 System.out.print(distanceMap[i][j] + " ");
@@ -127,8 +129,7 @@ public class Map {
     }
 
 
-
-    private void printMap (boolean[][] map) {
+    private void printMap(boolean[][] map) {
         for (int i = 0; i < this.h; i++) {
             for (int j = 0; j < this.w; j++) {
                 if (map[i][j])
@@ -141,7 +142,7 @@ public class Map {
         System.out.println();
     }
 
-    private void createPathToBase (Mine mine) {
+    private void createPathToBase(Mine mine) {
         Path path = new Path();
         int y = mine.getY();
         int x = mine.getX();
@@ -168,8 +169,51 @@ public class Map {
         return agents;
     }
 
-    public void addAgent (Agent agent) {
+    public void addAgent(Agent agent) {
         agent.setMap(this);
         this.agents.add(agent);
     }
+
+    public boolean isAvailableWay(int x, int y) {
+        if (mapValue(y, x) && !isBase(x, y) && !isAgent(x, y))
+            return true;
+        else return false;
+    }
+
+    public boolean isMine(int x, int y) {
+        for (Mine mine : mines) {
+            if ((mine.getX() == x) && (mine.getY() == y))
+                return true;
+        }
+        return false;
+    }
+
+
+    public boolean isAgent(int x, int y) {
+        for (Agent agent : agents) {
+            if ((agent.getX() == x) && (agent.getY() == y))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isBase(int x, int y) {
+        return ((x == baseX) && (y == baseY));
+    }
+
+    public Mine getMineByXY(int x, int y) {
+        Mine tempMine = mines.get(0);
+        for (Mine mine : mines) {
+            if ((mine.getX() == x) && (mine.getY() == y)) {
+                return mine;
+            }
+        }
+        return tempMine;
+    }
+
+    public void addResource () {
+        baseResource += 6;
+        System.out.println("Base resource: " + baseResource);
+    }
+
 }

@@ -22,4 +22,10 @@ public class Path {
             System.out.print(i + " ");
         }
     }
+    public int getSize () {
+        return path.size();
+    }
+    public int getWay(int index) {
+        return path.get(index);
+    }
 }

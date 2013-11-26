@@ -10,25 +10,42 @@ import javax.swing.*;
  */
 public class Main {
     private static int[][] intMap = {
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 1, 1, 1, 1, 0, 1, 0},
-            {0, 1, 0, 0, 0, 0, 1, 0, 1, 0},
-            {0, 1, 0, 1, 1, 1, 1, 0, 1, 0},
-            {0, 1, 0, 1, 0, 1, 1, 0, 1, 0},
-            {0, 1, 1, 1, 0, 1, 1, 0, 1, 0},
-            {0, 1, 0, 0, 0, 0, 1, 1, 1, 0},
-            {0, 1, 0, 1, 1, 1, 1, 0, 1, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0},
+            {0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0},
+            {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
     private static Map map = new Map(intMap);
     public static void main( String[] args ) {
         map.setBase(1, 8);
         Mine mine0 = new Mine(1, 3);
         Mine mine1 = new Mine(7, 4);
+        Mine mine2 = new Mine(8, 1);
+        Mine mine3 = new Mine(12, 3);
+        Mine mine4 = new Mine(12, 8);
+        Mine mine5 = new Mine(1, 11);
         Agent agent0 = new Agent(1, 1);
+        Agent agent1 = new Agent(7, 8);
+        Agent agent2 = new Agent(10, 10);
         map.addMine(mine0);
         map.addMine(mine1);
+        map.addMine(mine2);
+        map.addMine(mine3);
+        map.addMine(mine4);
+        map.addMine(mine5);
         map.addAgent(agent0);
+        map.addAgent(agent1);
+        map.addAgent(agent2);
 //        map.printDistanceMap();
         SwingUtilities.invokeLater(new Runnable() {
 

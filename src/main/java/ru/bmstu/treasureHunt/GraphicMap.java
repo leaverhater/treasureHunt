@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,18 +29,26 @@ class Surface extends JPanel {
 }
 
 public class GraphicMap extends JFrame {
+
+
     private Map map;
     private Color BLACK = new Color(0, 0, 0);
     private Color WHITE = new Color(255, 255, 255);
     private int cellSize = 32;
     private BufferedImage mineImg;
     private BufferedImage baseImg;
+    private List <BufferedImage> agentImgs = new ArrayList<BufferedImage>();
     private BufferedImage agentImg;
     private BufferedImage trackImg;
     private java.util.List<Mine> mines;
     private java.util.List<Agent> agents;
+
     private Graphics2D g2d;
     private Surface sf;
+
+    private int TRACK_NUM = 3;
+
+
 
     public GraphicMap(Map map) {
         this.map = map;
@@ -51,7 +60,11 @@ public class GraphicMap extends JFrame {
         try {
             mineImg = ImageIO.read(new File("/mnt/ext/mine.png"));
             baseImg = ImageIO.read(new File("/mnt/ext/base.png"));
+            agentImgs.add(ImageIO.read(new File("/mnt/ext/agent.jpg")));
+            agentImgs.add(ImageIO.read(new File("/mnt/ext/agent1.gif")));
+            agentImgs.add(ImageIO.read(new File("/mnt/ext/agent2.jpg")));
             agentImg = ImageIO.read(new File("/mnt/ext/agent.jpg"));
+            trackImg = ImageIO.read(new File("/mnt/ext/coin.gif"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +83,7 @@ public class GraphicMap extends JFrame {
     }
 
     public void drawMap(Graphics g) {
-        System.out.println("Initializing graphics");
+//        System.out.println("Initializing graphics");
         g2d = initGraphics(g);
         for (int i = 0; i < map.h; i++) {
             for (int j = 0; j < map.w; j++) {
@@ -88,10 +101,13 @@ public class GraphicMap extends JFrame {
             g2d.drawImage(mineImg, null, mine.getX() * cellSize, mine.getY() * cellSize);
         }
         for (Agent agent : agents) {
-            g2d.drawImage(agentImg, null, agent.getX() * cellSize, agent.getY() * cellSize);
+            g2d.drawImage(agentImgs.get(agent.getId() % agents.size()), null, agent.getX() * cellSize, agent.getY() * cellSize);
+            for (Track track : agent.getTracks()) {
+                g2d.drawImage(trackImg, null, track.getX() * cellSize, track.getY() * cellSize);
+            }
+
         }
         g2d.drawImage(baseImg, null, map.getBaseX() * cellSize, map.getBaseY() * cellSize);
-
     }
 
     private Graphics2D initGraphics(Graphics g) {
@@ -109,12 +125,10 @@ public class GraphicMap extends JFrame {
         int[] dx = {0, 1, 0, -1};
         int destX = agent.getX() + dx[way];
         int destY = agent.getY() + dy[way];
-        System.out.println("Moving an agent");
-        g2d.fillRect(agent.getX() * cellSize, agent.getY() * cellSize, cellSize, cellSize);
+        agent.setPrevX(agent.getX());
+        agent.setPrevY(agent.getY());
         agent.setX(destX);
         agent.setY(destY);
-        g2d.drawImage(agentImg, null, destX * cellSize, destY * cellSize);
-//        sf.revalidate();
         sf.repaint();
 
     }
@@ -125,5 +139,12 @@ public class GraphicMap extends JFrame {
 
     private void moveAgents () {
 
+    }
+    public Map getMap() {
+        return map;
+    }
+
+    public int getTRACK_NUM() {
+        return TRACK_NUM;
     }
 }
