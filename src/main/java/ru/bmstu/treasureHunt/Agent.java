@@ -76,6 +76,10 @@ public class Agent {
         knownMines.add(mine);
     }
 
+    public void addKnownMine(List<Mine> mine) {
+        knownMines.addAll(mine);
+    }
+
     public boolean ifKnownMine(Mine mine) {
         for (Mine knownMine : knownMines) {
             if (knownMine.equals(mine)) {
@@ -103,13 +107,14 @@ public class Agent {
     }
 
     public int nextStepToBase() {
-        if (currentStep == currentPath.getSize() - 3) {
+        if (currentStep == currentPath.getSize() - 2) {
             ifBack = false;
 //            System.out.println("Complete!");
             map.addResource();
         }
-        currentStep++;
-        return currentPath.getWay(currentStep);
+//        currentStep++;
+//        return currentPath.getWay(currentStep);
+        return currentPath.getWay(currentStep++);
     }
 
     public boolean isWithTrack() {

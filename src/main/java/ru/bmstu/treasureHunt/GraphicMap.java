@@ -79,7 +79,6 @@ public class GraphicMap extends JFrame {
         add(sf);
         setSize(map.w * cellSize, map.h * cellSize);
         setLocationRelativeTo(null);
-
     }
 
     public void drawMap(Graphics g) {

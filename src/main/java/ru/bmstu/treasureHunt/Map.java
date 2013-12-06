@@ -19,7 +19,6 @@ public class Map {
     }
 
     public int getBaseY() {
-
         return baseY;
     }
 
@@ -76,11 +75,12 @@ public class Map {
 
     public void addMine(Mine mine) {
         mine.setMap(this);
-        createPathToBase(mine);
+//        createPathToBase(mine);
         this.mines.add(mine);
 //        System.out.print("Added mine to map. Path to base: ");
 //        mine.getPathToBase().printPath();
 //        System.out.println();
+        createDistanceMap();
     }
 
     public List<Mine> getMines() {
@@ -90,7 +90,6 @@ public class Map {
     public void setBase(int y, int x) {
         baseY = y;
         baseX = x;
-        createDistanceMap();
     }
 
     private void createDistanceMap() {
@@ -107,7 +106,7 @@ public class Map {
                 for (int j = 0; j < w; j++) {
                     if (distanceMap[i][j] == d) {
                         for (int z = 0; z < 4; z++) {
-                            if (map[i + dy[z]][j + dx[z]] && (distanceMap[i + dy[z]][j + dx[z]] == 0)) {
+                            if (mapValue(i + dy[z],j + dx[z]) && (distanceMap[i + dy[z]][j + dx[z]] == 0) && !isMine(j + dx[z], i + dy[z])) {
                                 distanceMap[i + dy[z]][j + dx[z]] = d + 1;
                                 stop = false;
                             }
@@ -152,7 +151,7 @@ public class Map {
         int[] dx = {0, 1, 0, -1};
         while (d != 1) {
             for (int i = 0; i < 4; i++) {
-                if (distanceMap[y + dy[i]][x + dx[i]] == d - 1) {
+                if ((distanceMap[y + dy[i]][x + dx[i]] == d - 1)) {
                     path.addWay(i);
                     y = y + dy[i];
                     x = x + dx[i];
@@ -163,6 +162,27 @@ public class Map {
             }
         }
         mine.setPathToBase(path);
+    }
+
+    public Path getPathToBase(int x, int y) {
+        Path path = new Path();
+        int d = distanceMap[y][x];
+//        System.out.println("Distance to mine: " + (d - 1));
+        int[] dy = {-1, 0, 1, 0};
+        int[] dx = {0, 1, 0, -1};
+        while (d != 1) {
+            for (int i = 0; i < 4; i++) {
+                if (distanceMap[y + dy[i]][x + dx[i]] == d - 1) {
+                    path.addWay(i);
+                    y = y + dy[i];
+                    x = x + dx[i];
+//                    System.out.println("Added way " + i);
+                    d--;
+                    break;
+                }
+            }
+        }
+        return path;
     }
 
     public List<Agent> getAgents() {
@@ -214,6 +234,14 @@ public class Map {
     public void addResource () {
         baseResource += 6;
         System.out.println("Base resource: " + baseResource);
+    }
+
+    public Agent whatAgent (int x, int y) {
+        for (Agent agent : agents) {
+            if ((agent.getX() == x) && (agent.getY() == y))
+                return agent;
+        }
+        return null;
     }
 
 }

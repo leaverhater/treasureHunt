@@ -52,6 +52,8 @@ public class TickThread extends Thread {
                 }
                 if (availableWays.size() == 1) {
                     nextWay = availableWays.get(0);
+                    nextX = agent.getX() + dx[nextWay];
+                    nextY = agent.getY() + dy[nextWay];
                 } else if (availableWays.size() == 0) {
 
                 } else {
@@ -66,7 +68,8 @@ public class TickThread extends Thread {
                     Mine mine = gm.getMap().getMineByXY(nextX, nextY);
                     Path path = mine.getPathToBase();
                     mine.reduceResource();
-                    agent.setIfBack(true, path);
+//                    agent.setIfBack(true, path);
+                    agent.setIfBack(true, gm.getMap().getPathToBase(agent.getX(), agent.getY()));
                     agent.setWithTrack(true);
                 } else if (gm.getMap().isBase(nextX, nextY)) {
 
